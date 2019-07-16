@@ -30,6 +30,34 @@ namespace Postos.Controllers
             var retorno = _postosBusiness.BuscarTodosPostos();
             return View(retorno);
         }
+        public ActionResult Mapa()
+        {
+            var retorno = _postosBusiness.BuscarTodosPostos();
+            return View(retorno);
+        }
+        public ActionResult BuscarPosto(int PostoId)
+        {
+            try
+            {
+                var posto = _postosBusiness.BuscarPostoPorId(PostoId);
+                return Json(new
+                {
+                    Status = "Ok",
+                    posto.Nome,
+                    posto.Latitude,
+                    posto.Longitude,
+                    gc = posto.PostoCombustivel.ElementAt(0).Preco.ToString().Replace('.',','),
+                    ga = posto.PostoCombustivel.ElementAt(1).Preco.ToString().Replace('.',','),
+                    ec = posto.PostoCombustivel.ElementAt(2).Preco.ToString().Replace('.',','),
+                    ea = posto.PostoCombustivel.ElementAt(3).Preco.ToString().Replace('.', ','),
+                });
+            }
+            catch (Exception e)
+            {
+                return Json(new { Status = "Erro", Mensagem = e.Message });
+            }
+           
+        }
         public ActionResult SalvarEditarPosto(int PostoId, string Nome, decimal gasComum, decimal gasAdit, decimal etanolComum, decimal etanolAdit, string latitude, string longitude)
         {
             try

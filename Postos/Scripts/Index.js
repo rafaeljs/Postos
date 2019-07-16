@@ -5,7 +5,6 @@
             ', Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>',
         maxZoom: 18
     }).addTo(map);
-    debugger;
     cor($("#GC").val());
     cor($("#GA").val());
     cor($("#EC").val());

@@ -5,7 +5,6 @@
             ', Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>',
         maxZoom: 18
     }).addTo(map);
-    map.on('click', onMapClick);
     $(".combustiveis").inputmask('decimal', {
         'alias': 'numeric',
         'groupSeparator': '.',
@@ -17,7 +16,62 @@
         'prefix': 'R$ ',
         'placeholder': ''
     });
+
+    if ($("#marcadores").val() != undefined) {
+        var marcadores = $("#marcadores").val().split('?');
+        marcadores.forEach(function (element, index) {
+            var latLngId = element.split('|');
+            blueMarker(latLngId[0].replace(',', '.'), latLngId[1].replace(',', '.'), latLngId[2])
+        });
+    }
+    else {
+        map.on('click', onMapClick);
+    }
+
 });
+
+function blueMarker(lat, lng, id) {
+    var blueIcon = new L.Icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    L.marker([lat, lng], { icon: blueIcon }).on('click',() => CarregarDados(id)).addTo(map);
+}
+
+function CarregarDados(id) {
+    $('#modalCarregando').modal("show");
+    $.ajax({
+        type: "POST",
+        url: "BuscarPosto",
+        data: {
+            PostoId: id
+        },
+        success: function (data) {
+            $('#modalCarregando').modal("hide");
+            if (data.Status == "Ok") {
+                $("#nome").val(data.Nome);
+                $("#gasComum").val(data.gc.replace('.',','));
+                $("#gasAdit").val(data.ga);
+                $("#etanolComum").val(data.ec);
+                $("#etanolAdit").val(data.ea);
+            }
+            else {
+                $("#alertE").show();
+                $("#msgErro").text(data.Mensagem);
+            }
+        },
+        error: function (data) {
+            $("#alertE").show();
+            $("#msgErro").text(data.Mensagem);
+            $('#modalCarregando').modal("hide");
+        }
+    });
+}
+
 var map = L.map('map').setView([-20.467524, -54.615538], 11);
 
 var popup = L.popup();

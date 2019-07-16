@@ -243,6 +243,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\Postos.cshtml" />
     <Content Include="Views\Home\EditarPosto.cshtml" />
+    <Content Include="Views\Home\Mapa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

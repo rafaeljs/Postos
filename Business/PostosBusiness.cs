@@ -98,5 +98,9 @@ namespace Business
             _contexto.Posto.Add(novoPosto);
             _contexto.SaveChanges();
         }
+        public Posto BuscarPostoPorId(int PostoId)
+        {
+            return _contexto.Posto.SingleOrDefault(x => x.PostoId == PostoId);
+        }
     }
 }
