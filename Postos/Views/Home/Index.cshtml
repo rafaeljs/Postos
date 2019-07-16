@@ -1,0 +1,151 @@
+﻿@using Contexto;
+@model List<PostoCombustivel>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+      crossorigin="">
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin="">
+</script>
+@{
+
+    var marcadores = new Dictionary<int, string>();
+    var cores = new List<string> {
+        "azul",
+        "verde",
+        "vermelho",
+        "laranja"
+    };
+    var gc = "";
+    var ga = "";
+    var ec = "";
+    var ea = "";
+    int count = 0;
+    if (Model != null)
+    {
+        foreach (var item in Model.Select(x => x.PostoId))
+        {
+            if (!marcadores.Keys.Contains(item))
+            {
+                marcadores.Add(item, cores.ElementAt(count));
+                count++;
+            }
+        }
+        gc = marcadores.Where(x => x.Key == Model.Skip(0).FirstOrDefault().PostoId).Select(x => x.Value).First();
+        ga = marcadores.Where(x => x.Key == Model.Skip(1).FirstOrDefault().PostoId).Select(x => x.Value).First();
+        ec = marcadores.Where(x => x.Key == Model.Skip(2).FirstOrDefault().PostoId).Select(x => x.Value).First();
+        ea = marcadores.Where(x => x.Key == Model.Skip(3).FirstOrDefault().PostoId).Select(x => x.Value).First();
+    }
+}
+
+@Html.Hidden("GC", Model?.Skip(0).First().Posto.Latitude + "|" + Model?.Skip(0).First().Posto.Longitude + "|" + gc)
+@Html.Hidden("GA", Model?.Skip(1).First().Posto.Latitude + "|" + Model?.Skip(1).First().Posto.Longitude + "|" + ga)
+@Html.Hidden("EC", Model?.Skip(2).First().Posto.Latitude + "|" + Model?.Skip(2).First().Posto.Longitude + "|" + ec)
+@Html.Hidden("EA", Model?.Skip(3).First().Posto.Latitude + "|" + Model?.Skip(3).First().Posto.Longitude + "|" + ea)
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Melhores Preços</h4>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Gasolina Comum</h5>
+                                            <div class="row" style="margin-left:0px;">
+                                                <h6 class="card-subtitle mb-2 text-muted">@Model.Skip(0).First().Posto.Nome</h6>
+                                                <div class="box @marcadores.Where(x => x.Key == Model.Skip(0).First().PostoId).Select(x => x.Value).First()" style="margin-left:5px;"></div>
+                                            </div>
+                                            <p class="card-text">R$ @Model.Skip(0).First().Preco</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Gasolina Aditivada</h5>
+                                            <div class="row" style="margin-left:0px;">
+                                                <h6 class="card-subtitle mb-2 text-muted">@Model.Skip(1).First().Posto.Nome</h6>
+                                                <div class="box @marcadores.Where(x => x.Key == Model.Skip(1).First().PostoId).Select(x => x.Value).First()" style="margin-left:5px;"></div>
+                                            </div>
+                                            <p class="card-text">R$ @Model.Skip(1).First().Preco</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Etanol Comum</h5>
+                                            <div class="row" style="margin-left:0px;">
+                                                <h6 class="card-subtitle mb-2 text-muted">@Model.Skip(2).First().Posto.Nome</h6>
+                                                <div class="box @marcadores.Where(x => x.Key == Model.Skip(2).First().PostoId).Select(x => x.Value).First()" style="margin-left:5px;"></div>
+                                            </div>
+                                            <p class="card-text">R$ @Model.Skip(2).First().Preco</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Etanol Aditivado</h5>
+                                            <div class="row" style="margin-left:0px;">
+                                                <h6 class="card-subtitle mb-2 text-muted">@Model.Skip(3).First().Posto.Nome</h6>
+                                                <div class="box @marcadores.Where(x => x.Key == Model.Skip(3).First().PostoId).Select(x => x.Value).First()" style="margin-left:5px;"></div>
+                                            </div>
+                                            <p class="card-text">R$ @Model.Skip(3).First().Preco</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="map" style="height: 300px"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <h1>Nenhum posto cadastrado foi encontrado!</h1>
+    </div>
+}
+
+<script src="~/Scripts/Index.js"></script>
+
+<style>
+    .box {
+        width: 10px;
+        height: 10px;
+    }
+
+    .vermelho {
+        background: #CB2940;
+    }
+
+    .laranja {
+        background: #CB8429;
+    }
+
+    .verde {
+        background: #26AB23;
+    }
+
+    .azul {
+        background: #2B82CB;
+    }
+</style>

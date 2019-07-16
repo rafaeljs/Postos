@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PostosStoreContainer" CdmEntityContainer="PostosContainer">
+    <EntitySetMapping Name="PostoSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Postos.Posto)">
+        <MappingFragment StoreEntitySet="PostoSet">
+          <ScalarProperty Name="PostoId" ColumnName="PostoId" />
+          <ScalarProperty Name="Nome" ColumnName="Nome" />
+          <ScalarProperty Name="Geolocalizacao" ColumnName="Geolocalizacao" />
+          <ScalarProperty Name="DataInclusao" ColumnName="DataInclusao" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CombustivelSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Postos.Combustivel)">
+        <MappingFragment StoreEntitySet="CombustivelSet">
+          <ScalarProperty Name="CombustivelId" ColumnName="CombustivelId" />
+          <ScalarProperty Name="Nome" ColumnName="Nome" />
+          <ScalarProperty Name="DataInclusao" ColumnName="DataInclusao" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PostoCombustivelSet">
+      <EntityTypeMapping TypeName="IsTypeOf(Postos.PostoCombustivel)">
+        <MappingFragment StoreEntitySet="PostoCombustivelSet">
+          <ScalarProperty Name="PostoCombustivelId" ColumnName="PostoCombustivelId" />
+          <ScalarProperty Name="PostoId" ColumnName="PostoId" />
+          <ScalarProperty Name="CombustivelId" ColumnName="CombustivelId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Postos" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+  <EntityContainer Name="PostosContainer" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="PostoSet" EntityType="Postos.Posto" />
+    <EntitySet Name="CombustivelSet" EntityType="Postos.Combustivel" />
+    <EntitySet Name="PostoCombustivelSet" EntityType="Postos.PostoCombustivel" />
+    <AssociationSet Name="PostoPostoCombustivel" Association="Postos.PostoPostoCombustivel">
+      <End Role="Posto" EntitySet="PostoSet" />
+      <End Role="PostoCombustivel" EntitySet="PostoCombustivelSet" />
+    </AssociationSet>
+    <AssociationSet Name="CombustivelPostoCombustivel" Association="Postos.CombustivelPostoCombustivel">
+      <End Role="Combustivel" EntitySet="CombustivelSet" />
+      <End Role="PostoCombustivel" EntitySet="PostoCombustivelSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Posto">
+    <Key>
+      <PropertyRef Name="PostoId" />
+    </Key>
+    <Property Name="PostoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nome" Type="GeographyPoint" Nullable="false" />
+    <Property Name="Geolocalizacao" Type="GeometryPoint" Nullable="false" />
+    <Property Name="DataInclusao" Type="DateTime" Nullable="false" />
+    <NavigationProperty Name="PostoCombustivel" Relationship="Postos.PostoPostoCombustivel" FromRole="Posto" ToRole="PostoCombustivel" />
+  </EntityType>
+  <EntityType Name="Combustivel">
+    <Key>
+      <PropertyRef Name="CombustivelId" />
+    </Key>
+    <Property Name="CombustivelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nome" Type="String" Nullable="false" />
+    <Property Name="DataInclusao" Type="DateTime" Nullable="false" />
+    <NavigationProperty Name="PostoCombustivel" Relationship="Postos.CombustivelPostoCombustivel" FromRole="Combustivel" ToRole="PostoCombustivel" />
+  </EntityType>
+  <EntityType Name="PostoCombustivel">
+    <Key>
+      <PropertyRef Name="PostoCombustivelId" />
+    </Key>
+    <Property Name="PostoCombustivelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="Posto" Relationship="Postos.PostoPostoCombustivel" FromRole="PostoCombustivel" ToRole="Posto" />
+    <Property Name="PostoId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Combustivel" Relationship="Postos.CombustivelPostoCombustivel" FromRole="PostoCombustivel" ToRole="Combustivel" />
+    <Property Name="CombustivelId" Type="Int32" Nullable="false" />
+  </EntityType>
+  <Association Name="PostoPostoCombustivel">
+    <End Type="Postos.Posto" Role="Posto" Multiplicity="1" />
+    <End Type="Postos.PostoCombustivel" Role="PostoCombustivel" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Posto">
+        <PropertyRef Name="PostoId" />
+      </Principal>
+      <Dependent Role="PostoCombustivel">
+        <PropertyRef Name="PostoId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CombustivelPostoCombustivel">
+    <End Type="Postos.Combustivel" Role="Combustivel" Multiplicity="1" />
+    <End Type="Postos.PostoCombustivel" Role="PostoCombustivel" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Combustivel">
+        <PropertyRef Name="CombustivelId" />
+      </Principal>
+      <Dependent Role="PostoCombustivel">
+        <PropertyRef Name="CombustivelId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
